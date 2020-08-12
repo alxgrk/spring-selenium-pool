@@ -1,0 +1,8 @@
+{
+  "properties": [
+    {
+      "name": "selenium.pool.enabled",
+      "type": "java.lang.String",
+      "description": "Enables the Selenium-WebDriver-Pool."
+  }
+] }

@@ -1,0 +1,30 @@
+{
+  "manifest_version": 2,
+  "name": "custom-extension",
+  "version": "0.0.1",
+  "background": {
+    "scripts": [
+      "index.js"
+    ]
+  },
+  "externally_connectable": {
+    "matches": [
+      "*://*.github.com/*"
+    ]
+  },
+  "permissions": [
+    "tabs",
+    "proxy",
+    "http://*/",
+    "https://*/",
+    "file://*/",
+    "webRequest",
+    "webRequestBlocking",
+    "cookies",
+    "activeTab",
+    "<all_urls>",
+    "notifications",
+    "processes",
+    "debugger"
+  ]
+}
