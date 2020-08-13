@@ -1,3 +1,18 @@
+/*
+ * Copyright © 2020 Alexander Girke (alexgirke@posteo.de)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package de.alxgrk.spring_selenium_pool
 
 import org.junit.jupiter.api.Assertions.assertNotNull
@@ -9,7 +24,7 @@ import org.junit.jupiter.api.assertThrows
 import org.openqa.selenium.chrome.ChromeOptions
 import java.nio.file.Files
 
-internal class ProfileSensitiveSeleniumContainerITest {
+class ProfileSensitiveSeleniumContainerITest {
 
     @Test
     fun `getWebDriver for empty profile returns original WebDriver`() {
@@ -54,6 +69,7 @@ internal class ProfileSensitiveSeleniumContainerITest {
         assertNotNull(webDriver)
         assertNotSame(webDriver, sameWebDriver)
     }
+
     @Test
     fun `getWebDriver returns the same driverByProfile for the same profile if profilesDirectory was set`() {
         try {
@@ -67,7 +83,7 @@ internal class ProfileSensitiveSeleniumContainerITest {
 
             assertNotNull(webDriver)
             assertSame(webDriver, sameWebDriver)
-        }finally {
+        } finally {
             ProfileSensitiveSeleniumContainer.profilesDirectory?.deleteRecursively()
             ProfileSensitiveSeleniumContainer.profilesDirectory = null
         }
@@ -80,5 +96,4 @@ internal class ProfileSensitiveSeleniumContainerITest {
                     .getWebDriver(ChromeProfile.EMPTY)
         }
     }
-
 }

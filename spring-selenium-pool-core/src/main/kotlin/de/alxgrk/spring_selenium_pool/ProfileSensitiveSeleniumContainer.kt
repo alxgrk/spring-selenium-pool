@@ -1,3 +1,18 @@
+/*
+ * Copyright © 2020 Alexander Girke (alexgirke@posteo.de)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package de.alxgrk.spring_selenium_pool
 
 import com.github.dockerjava.api.model.Bind
@@ -22,8 +37,8 @@ import java.util.concurrent.atomic.AtomicBoolean
  *     - it is possible to control the [RemoteWebDriver]'s creation, which is necessary to restart Chrome with different profiles
  */
 internal class ProfileSensitiveSeleniumContainer(
-        val id: ContainerId = ContainerId.random(),
-        val inUse: AtomicBoolean = AtomicBoolean(false)
+    internal val id: ContainerId = ContainerId.random(),
+    internal val inUse: AtomicBoolean = AtomicBoolean(false)
 ) : BrowserWebDriverContainer<ProfileSensitiveSeleniumContainer>() {
 
     internal var profile: ChromeProfile? = null
@@ -52,7 +67,7 @@ internal class ProfileSensitiveSeleniumContainer(
      * @param chromeProfile the profile to start the [RemoteWebDriver] with
      *                (typically, a social media platform username)
      */
-    fun getWebDriver(chromeProfile: ChromeProfile): RemoteWebDriver {
+    internal fun getWebDriver(chromeProfile: ChromeProfile): RemoteWebDriver {
         require(capabilities != null) {
             "You need to define ChromeOptions via withCapabilities first."
         }
@@ -157,12 +172,13 @@ internal class ProfileSensitiveSeleniumContainer(
                         .groupBy { file -> ChromeProfile(file.name) }
                         .mapValues { entry -> entry.value.first() }
     }
-
 }
 
+/**
+ * A holder for the profile that should be used with Chrome.
+ */
 data class ChromeProfile(val id: String) {
     companion object {
         val EMPTY = ChromeProfile("")
     }
-
 }

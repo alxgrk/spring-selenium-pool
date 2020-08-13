@@ -1,3 +1,18 @@
+/*
+ * Copyright © 2020 Alexander Girke (alexgirke@posteo.de)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package de.alxgrk.spring_selenium_pool
 
 import com.github.dockerjava.api.model.Bind
@@ -18,16 +33,15 @@ import java.util.concurrent.CompletableFuture
 import java.util.concurrent.LinkedBlockingQueue
 import java.util.concurrent.TimeUnit
 
-
 /**
  * This class creates a pool of [poolSize] Selenium containers on initialization.
  * It furthermore takes care of supplying [RemoteWebDriver]s for the pool's containers
  * and manages their recycling, once the client is no longer needing a [RemoteWebDriver].
  */
 class WebDriverPool(
-        internal val poolSize: Int,
-        internal val recordingDirectory: String,
-        private vararg val filesInClasspath: String
+    internal val poolSize: Int,
+    internal val recordingDirectory: String,
+    internal vararg val extensionFilesInClasspath: String
 ) : AutoCloseable {
 
     private val shouldSafeRecordings = recordingDirectory.isNotEmpty()
@@ -35,7 +49,7 @@ class WebDriverPool(
     private val containerFactory: () -> ProfileSensitiveSeleniumContainer = {
         ProfileSensitiveSeleniumContainer()
                 .also { container ->
-                    ChromeConfiguration(*filesInClasspath).apply {
+                    ChromeConfiguration(*extensionFilesInClasspath).apply {
                         container.withCapabilities(options)
 
                         // bind extension directory to docker container
@@ -64,7 +78,6 @@ class WebDriverPool(
         runningContainers = (1..poolSize).map { containerFactory() }.toSet()
         runningContainers.map { container -> CompletableFuture.runAsync { container.start() } }
                 .forEach { it.join() }
-
     }
 
     @get:VisibleForTesting
@@ -197,27 +210,47 @@ class WebDriverPool(
     }
 
     companion object {
-        val log = LoggerFactory.getLogger(WebDriverPool::class.java)!!
+        private val log = LoggerFactory.getLogger(WebDriverPool::class.java)!!
     }
 }
 
+/**
+ * This class encapsulates relevant information about the Docker container and its related [WebDriver].
+ * It is also dependent on whatever [ChromeProfile] you specify.
+ */
 class WebDriverForContainer internal constructor(
-        private val profile: ChromeProfile,
-        private val webDriverPool: WebDriverPool,
-        private val container: ProfileSensitiveSeleniumContainer
+    profile: ChromeProfile,
+    private val webDriverPool: WebDriverPool,
+    private val container: ProfileSensitiveSeleniumContainer
 ) : AutoCloseable {
 
+    /**
+     * The ID of the Docker container.
+     */
     val containerId = container.id
 
+    /**
+     * The [WebDriver] used to interact with Selenium.
+     */
     // at this point, web driver must exist
-    // FIXME this leads to problems, when multiple containers try to access the same profile
     val webDriver: WebDriver = container.getWebDriver(profile).also {
         it.fileDetector = LocalFileDetector()
         it.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS).pageLoadTimeout(20, TimeUnit.SECONDS)
     }
 
+    /**
+     * The IP address of the container.
+     */
     val host: String = container.containerIpAddress!!
+
+    /**
+     * The external Selenium port of the container.
+     */
     val exposedSeleniumPort: Int = container.getMappedPort(SELENIUM_PORT)!!
+
+    /**
+     * The external VNC port of the container.
+     */
     val exposedVncPort: Int = container.getMappedPort(VNC_PORT)!!
 
     init {
@@ -247,17 +280,28 @@ class WebDriverForContainer internal constructor(
         const val SELENIUM_PORT = 4444
         const val VNC_PORT = 5900
     }
-
 }
 
+/**
+ * A separate ID for the container: either it references an already used container
+ * or it is used to be provided by a new container.
+ */
 sealed class ContainerId {
 
+    /**
+     * Gets you an already used container.
+     */
     data class Reuse(val id: String) : ContainerId()
 
+    /**
+     * Gets you a new container.
+     */
     object Fresh : ContainerId()
 
     companion object {
+        /**
+         * Returns a [Reuse] id with a random value.
+         */
         fun random() = Reuse(UUID.randomUUID().toString())
     }
-
 }
