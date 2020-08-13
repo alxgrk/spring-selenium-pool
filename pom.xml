@@ -5,7 +5,7 @@
 
     <groupId>de.alxgrk</groupId>
     <artifactId>spring-selenium-pool-parent</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>spring-selenium-pool-parent</name>
