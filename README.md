@@ -1,20 +1,20 @@
-# Selenium Pool
+# 🏊 Selenium Pool
 
 This small library helps to create a pool of Selenium Docker Container with a configurable size.
 
-## Prerequisites
+## 🩲 Prerequisites
 
 Make sure to have the following installed:
  * Docker
  
-## Utilities
+## 🥽 Utilities
 
 To connect to the running Selenium container, you have to have `vncviewer` & `tigervnc-common` installed. If correctly configured, simply run:
 ```shell script
 ./vnc.sh
 ```
  
-## Configuration
+## 🛠️ Configuration
 
 This library is configurable via Spring-Boot properties. Autocompletion when working with IntelliJ included. This is an example configuration:
 ```properties
@@ -25,9 +25,9 @@ selenium.pool.profiles-directory= # if empty, a temporary directory will be crea
 selenium.pool.extension-files-in-classpath= # if empty, no extension files will be loaded
 ```
 
-## Usage
+## 🤽 Usage
 
-### Getting a container
+### 💆 Getting a container
 Trying to get a container synchronously returns null, if there is no idle container at the moment.
 ```kotlin
 @Component
@@ -88,7 +88,7 @@ class SomeSeleniumTask(@Autowired webDriverPool: WebDriverPool) {
 }
 ```
 
-### Interacting with Selenium
+### 🤝 Interacting with Selenium
 To interact with the Selenium server running within the container, you can simply use the provided `WebDriver` instance.
 ```kotlin
 @Component
@@ -102,7 +102,7 @@ class SomeSeleniumTask(@Autowired webDriverPool: WebDriverPool) {
 }
 ```
 
-### Finishing work
+### 👋 Finishing work
 Once you are done with doing whatever you wanted to do, you should return the container to the pool 
 (unless you are sure, you'll need the exact same instance later).
 
@@ -121,10 +121,10 @@ class SomeSeleniumTask(@Autowired webDriverPool: WebDriverPool) {
 }
 ```
 
-## Acknowledgements
+## 🎉 Acknowledgements
 
 This library heavily relies on the great work of the [Testcontainers](https://github.com/testcontainers/testcontainers-java) team - thanks a lot!
 
-## Closing notes
+## 📝 Closing notes
 
 I hope you like this small library. If you have any feedback or encounter any problem, feel free to contact me, create an issue or even better a pull request. 
