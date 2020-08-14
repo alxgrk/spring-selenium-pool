@@ -1,6 +1,7 @@
 # 🏊 Selenium Pool
 
 [![Maven Central](https://img.shields.io/maven-central/v/de.alxgrk/spring-selenium-pool-core?color=%23080&style=for-the-badge)](https://search.maven.org/search?q=g:%22de.alxgrk%22%20AND%20a:%22spring-selenium-pool-core%22)
+[![DEV.to Post](https://d2fltix0v2e0sb.cloudfront.net/dev-badge.svg)](https://dev.to/alxgrk/spring-library-selenium-docker-pool-4ja0)
 
 This small library helps to create a pool of Selenium Docker Container with a configurable size.
 
@@ -28,7 +29,8 @@ implementation("de.alxgrk:spring-selenium-pool-core:1.0.0")
 
 ## 🛠️ Configuration
 
-This library is configurable via Spring-Boot properties. Autocompletion when working with IntelliJ included. This is an example configuration:
+This library is configurable via Spring-Boot properties. Auto-Completion when working with IntelliJ included. 
+This is an example configuration showing the default values:
 ```properties
 # default values
 selenium.pool.size=3
@@ -59,7 +61,8 @@ class SomeSeleniumTask(@Autowired webDriverPool: WebDriverPool) {
 }
 ```
 
-Instead, one could also use the \*Async method, to wait until there is an idle container.
+Instead, one could also use the \*Async method, to wait until there is an idle container. 
+*(If you've expected a suspending function at this point, have a look at [CompletionStage<T>.await() extension function](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-jdk8/kotlinx.coroutines.future/java.util.concurrent.-completion-stage/await.html) for converting `CompletableFuture`)*
 ```kotlin
 @Component
 class SomeSeleniumTask(@Autowired webDriverPool: WebDriverPool) {
@@ -72,6 +75,11 @@ class SomeSeleniumTask(@Autowired webDriverPool: WebDriverPool) {
 
         // ... or with timeout
         container.get(1, TimeUnit.SECONDS)
+
+        // ... or coroutine style
+        GlobalScope.launch {
+            val webDriverForContainer = container.await()
+        }
     }    
 
 }
@@ -139,6 +147,13 @@ class SomeSeleniumTask(@Autowired webDriverPool: WebDriverPool) {
 
 }
 ```
+
+### ✨ Custom Chrome extension
+
+If you read about the configuration properties carefully, you may have notice the parameter about extension files.
+It is possible to install a custom Chrome extension by specifying a `manifest.json` and a corresponding `script.js` file.
+This might be helpful for a couple of reasons including e.g. for grabbing the network traffic.
+For an example on how to use this, see [spring-selenium-pool-example](./spring-selenium-pool-example/src/main/resources/).
 
 ## 🎉 Acknowledgements
 
