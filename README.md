@@ -1,19 +1,26 @@
 # 🏊 Selenium Pool
 
+[![Maven Central](https://img.shields.io/maven-central/v/de.alxgrk/spring-selenium-pool-core?color=%23080&style=for-the-badge)](https://search.maven.org/search?q=g:%22de.alxgrk%22%20AND%20a:%22spring-selenium-pool-core%22)
+
 This small library helps to create a pool of Selenium Docker Container with a configurable size.
 
 ## 🩲 Prerequisites
 
 Make sure to have the following installed:
  * Docker
- 
-## 🥽 Utilities
 
-To connect to the running Selenium container, you have to have `vncviewer` & `tigervnc-common` installed. If correctly configured, simply run:
-```shell script
-./vnc.sh
+## 💿 Installation
+
+In Maven add our core dependency:  
+
+```xml
+<dependency>
+  <groupId>de.alxgrk</groupId>
+  <artifactId>spring-selenium-pool-core</artifactId>
+  <version>1.0.0</version>
+</dependency>
 ```
- 
+
 ## 🛠️ Configuration
 
 This library is configurable via Spring-Boot properties. Autocompletion when working with IntelliJ included. This is an example configuration:
@@ -23,6 +30,13 @@ selenium.pool.size=3
 selenium.pool.recording-directory= # if empty, no recording will happen
 selenium.pool.profiles-directory= # if empty, a temporary directory will be created and deleted on exit
 selenium.pool.extension-files-in-classpath= # if empty, no extension files will be loaded
+```
+ 
+## 🥽 Utilities
+
+To connect to the running Selenium container, you have to have `vncviewer` & `tigervnc-common` installed. If correctly configured, simply run:
+```shell script
+./vnc.sh
 ```
 
 ## 🤽 Usage
