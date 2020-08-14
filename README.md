@@ -11,7 +11,7 @@ Make sure to have the following installed:
 
 ## 💿 Installation
 
-In Maven add our core dependency:  
+For Maven, add this dependency:  
 
 ```xml
 <dependency>
@@ -19,6 +19,11 @@ In Maven add our core dependency:
   <artifactId>spring-selenium-pool-core</artifactId>
   <version>1.0.0</version>
 </dependency>
+```
+
+For Gradle use:
+```kotlin
+implementation("de.alxgrk:spring-selenium-pool-core:1.0.0")
 ```
 
 ## 🛠️ Configuration
