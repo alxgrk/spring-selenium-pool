@@ -1,7 +1,7 @@
 # 🏊 Selenium Pool
 
 [![Maven Central](https://img.shields.io/maven-central/v/de.alxgrk/spring-selenium-pool-core?color=%23080&style=for-the-badge)](https://search.maven.org/search?q=g:%22de.alxgrk%22%20AND%20a:%22spring-selenium-pool-core%22)
-[![DEV.to Post](https://d2fltix0v2e0sb.cloudfront.net/dev-badge.svg)](https://dev.to/alxgrk/spring-library-selenium-docker-pool-4ja0)
+<a href="https://dev.to/alxgrk/spring-library-selenium-docker-pool-4ja0"><img src="https://d2fltix0v2e0sb.cloudfront.net/dev-badge.svg" alt="DEV.to Post" height="30" width="30" ></a>
 
 This small library helps to create a pool of Selenium Docker Container with a configurable size.
 
