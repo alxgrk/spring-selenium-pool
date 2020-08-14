@@ -53,7 +53,7 @@ Trying to get a container synchronously returns null, if there is no idle contai
 class SomeSeleniumTask(@Autowired webDriverPool: WebDriverPool) {
 
     init {
-        val container: WebDriverForContainer = webDriverPool.getWebDriverForContainer() // could return null
+        val container: WebDriverForContainer? = webDriverPool.getWebDriverForContainer()
     }    
 
 }
@@ -115,7 +115,7 @@ class SomeSeleniumTask(@Autowired webDriverPool: WebDriverPool) {
 
     init {
         val container = webDriverPool.getWebDriverForContainer()
-        container.webDriver.get("https://foo.bar/")
+        container!!.webDriver.get("https://foo.bar/")
     }    
 
 }
@@ -132,7 +132,7 @@ or `.use()` extension function in Kotlin.
 class SomeSeleniumTask(@Autowired webDriverPool: WebDriverPool) {
 
     init {
-        webDriverPool.getWebDriverForContainer().use {
+        webDriverPool.getWebDriverForContainer()!!.use {
             it.webDriver.get("https://foo.bar/")
         }
     }    
