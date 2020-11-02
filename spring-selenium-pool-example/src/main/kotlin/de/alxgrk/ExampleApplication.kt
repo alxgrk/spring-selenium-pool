@@ -16,6 +16,7 @@
 package de.alxgrk
 
 import de.alxgrk.spring_selenium_pool.ChromeExtensionUtility.initializeExtension
+import de.alxgrk.spring_selenium_pool.ChromeExtensionUtility.sendAsyncMessage
 import de.alxgrk.spring_selenium_pool.ChromeProfile
 import de.alxgrk.spring_selenium_pool.WebDriverPool
 import org.openqa.selenium.By
@@ -45,6 +46,19 @@ class ExampleApplication {
                     😎😎😎
                 
                     """.trimIndent())
+
+            // set proxy
+            val proxyIp = "127.0.0.1"
+            val proxyPort = 12345
+            (this as JavascriptExecutor).sendAsyncMessage("""
+                    { 
+                        extension: "setProxy",
+                        proxyJson: { 
+                            ip: "$proxyIp",
+                            port: $proxyPort
+                        }
+                    }
+                    """)
         }
     }
 }
