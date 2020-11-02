@@ -51,15 +51,6 @@ object ChromeExtensionUtility {
 
     private const val EXTENSION_ID = "nmamelejkbhljllfalieeoedmnfolplf"
 
-    // sent message will be received by the extensions index.js
-    private const val INITIALIZE_EXTENSION = """
-            var doneCallback = arguments[arguments.length - 1]; // this is injected by chrome runtime
-            chrome.runtime.sendMessage("$EXTENSION_ID", 
-                {extension: "init"}, // request object
-                {}, // sender object
-                function(a) { doneCallback(a); } // sendResponse callback
-            );"""
-
     internal fun Array<out String>.copyTo(targetDir: Path) =
         map { file ->
             ChromeExtensionUtility::class.java.classLoader.getResourceAsStream(file)!!
@@ -79,8 +70,21 @@ object ChromeExtensionUtility {
         val alreadyEnabled = isExtensionInitialized[this]
         if (alreadyEnabled == null || !alreadyEnabled) {
             isExtensionInitialized[this] = true
-            return this.executeAsyncScript(INITIALIZE_EXTENSION)
+            return sendAsyncMessage("{extension: \"init\"}")
         }
         return null
     }
+
+    /**
+     * Sends a message to the extension asynchronously.
+     */
+    fun JavascriptExecutor.sendAsyncMessage(requestObject: String) = executeAsyncScript(
+        """
+            var doneCallback = arguments[arguments.length - 1]; // this is injected by chrome runtime
+            chrome.runtime.sendMessage("$EXTENSION_ID",
+                $requestObject,
+                {},
+                function(a) { doneCallback(a); } // sendResponse callback
+            );
+        """)
 }
